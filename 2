@@ -1,1 +1,42 @@
+public class Main {
+    public static void main(String[] args) {
 
+    Logger simple = new SimpleLogger();
+    Logger smart = new SmartLogger();
+
+    simple.log("Текущие дата и время");
+    smart.log("Дата и время");
+    smart.log("Дата и время error");
+    smart.log("Дата и время ERROR");
+    }
+}
+
+public interface Logger {
+    void log(String msg);
+}
+
+import java.time.LocalDateTime;
+
+public class SimpleLogger implements Logger{
+
+    @Override
+    public void log(String msg) {
+        LocalDateTime now = LocalDateTime.now();
+        System.out.println("[" + now + "] " + msg);
+    }
+}
+
+import java.time.LocalDateTime;
+
+public class SmartLogger implements Logger {
+
+    public int number = 1;
+
+    @Override
+    public void log(String msg) {
+        LocalDateTime now = LocalDateTime.now();
+        String first = msg.toLowerCase().contains("error") ? "ERROR" : "INFO";
+        System.out.println(first + "#" + number + " [" + now + "] " + msg);
+        number++;
+    }
+}
