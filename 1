@@ -1,1 +1,95 @@
+public class Main {
+    public static void main(String[] args) {
+
+        Account simple = new SimpleAccount(1000);
+        Account credit = new CreditAccount(500);
+
+        simple.pay(300);
+        simple.add(400);
+
+        credit.pay(200);
+        simple.transfer(credit, 100);
+
+        System.out.println(simple.getBalance());
+        System.out.println(credit.getBalance());
+    }
+}
+
+public abstract class Account {
+    protected long balance;
+
+    public Account(long firsBalance){
+        this.balance = firsBalance;
+    }
+
+    public abstract boolean add(long amount);
+
+    public abstract boolean pay(long amount);
+
+    public boolean transfer(Account account, long amount){
+        if (this.pay(amount)) {
+            if (account.add(amount)){
+                return true;
+            } else {
+                this.add(amount);
+            }
+        }
+        return false;
+    }
+
+    public long getBalance(){
+        return balance;
+    }
+}
+
+public class CreditAccount extends Account{
+    private final long creditLimit;
+
+    public CreditAccount(long creditLimit){
+        super(0);
+        this.creditLimit = creditLimit;
+    }
+
+    @Override
+    public boolean add(long amount) {
+        if (amount <= 0 || balance + amount > 0){
+            return false;
+        }
+        balance += amount;
+        return true;
+    }
+
+    @Override
+    public boolean pay(long amount) {
+        if (amount > 0 && (balance - amount) >= -creditLimit) {
+            balance -= amount;
+            return true;
+        }
+        return false;
+    }
+}
+
+public class SimpleAccount extends Account{
+
+    public SimpleAccount(long firsBalance){
+        super(firsBalance);
+    }
+
+    @Override
+    public boolean add(long amount) {
+        if (amount > 0) {
+            balance += amount;
+            return true;
+        } return  false;
+    }
+
+    @Override
+    public boolean pay(long amount) {
+        if (amount > 0 && balance >= amount) {
+            balance -= amount;
+            return true;
+        } return  false;
+    }
+}
+
 
